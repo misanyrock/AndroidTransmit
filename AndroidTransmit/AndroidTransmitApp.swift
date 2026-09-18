@@ -1,32 +1,21 @@
-//
-//  AndroidTransmitApp.swift
-//  AndroidTransmit
-//
-//  Created by cxc on 2026/9/18.
-//
-
 import SwiftUI
-import SwiftData
 
 @main
 struct AndroidTransmitApp: App {
-    var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            Item.self,
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
-        do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
-            fatalError("Could not create ModelContainer: \(error)")
-        }
-    }()
-
+    @NSApplicationDelegateAdaptor(AppDelegate.self) private var delegate
+    @State private var store = BrowserStore()
     var body: some Scene {
-        WindowGroup {
-            ContentView()
+        Window("AndroidTransmit", id: "main") {
+            ContentView(store: store)
+                .frame(minWidth: 860, minHeight: 540)
+                .onAppear { delegate.store = store }
         }
-        .modelContainer(sharedModelContainer)
+        .defaultSize(width: 1080, height: 720)
+        .commands {
+            CommandGroup(replacing: .newItem) {
+                Button("刷新") { Task { if store.connected == nil { await store.scan() } else { await store.reload() } } }
+                    .keyboardShortcut("r").disabled(store.isLoading || store.transfers.isBusy)
+            }
+        }
     }
 }
