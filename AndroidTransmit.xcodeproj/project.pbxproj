@@ -269,7 +269,6 @@
 					"$(SRCROOT)/.build/native/lib",
 					/opt/homebrew/opt/libmtp/lib,
 				);
-				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -322,7 +321,6 @@
 					"$(SRCROOT)/.build/native/lib",
 					/opt/homebrew/opt/libmtp/lib,
 				);
-				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",

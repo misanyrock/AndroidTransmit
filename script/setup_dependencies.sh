@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 cd "$(dirname "$0")/.."
-if [[ -f /opt/homebrew/opt/libmtp/include/libmtp.h ]]; then exit 0; fi
 if [[ ! -f /opt/homebrew/opt/libusb/lib/pkgconfig/libusb-1.0.pc ]]; then
   echo '请先安装 brew install libusb pkgconf' >&2; exit 1
 fi
