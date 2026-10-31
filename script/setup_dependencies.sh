@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 cd "$(dirname "$0")/.."
-if [[ ! -f /opt/homebrew/opt/libusb/lib/pkgconfig/libusb-1.0.pc ]]; then
+LIBUSB_PREFIX="$(brew --prefix libusb)"
+if [[ ! -f "$LIBUSB_PREFIX/lib/pkgconfig/libusb-1.0.pc" ]]; then
   echo '请先安装 brew install libusb pkgconf' >&2; exit 1
 fi
 VERSION=1.1.23
@@ -18,6 +19,6 @@ fi
 printf '%s  %s\n' "$SHA" "$ARCHIVE" | shasum -a 256 -c -
 tar -xzf "$ARCHIVE" -C .build/dependencies
 cd ".build/dependencies/libmtp-$VERSION"
-PKG_CONFIG_PATH=/opt/homebrew/opt/libusb/lib/pkgconfig ./configure --prefix="$PREFIX" --disable-mtpz --disable-static --disable-silent-rules
+PKG_CONFIG_PATH="$LIBUSB_PREFIX/lib/pkgconfig" ./configure --prefix="$PREFIX" --disable-mtpz --disable-static --disable-silent-rules
 make -j4
 make install

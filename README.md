@@ -22,24 +22,6 @@ brew install libmtp
 
 Codex 的 Run 按钮已指向构建启动脚本。脚本支持 `--build`、`--verify`、`--debug`、`--logs`、`--telemetry`；`CONFIGURATION=Release ./script/build_and_run.sh --build` 构建 Release。启动脚本会结束现有 AndroidTransmit 进程，请勿在传输期间重新运行脚本。应用使用本机 ad-hoc 签名，开启 Hardened Runtime，关闭 App Sandbox，并允许加载本机的第三方动态库。
 
-## DMG 打包与 GitHub Actions
-
-推送到 `main`、创建面向 `main` 的 Pull Request，或在 [Actions](https://github.com/misanyrock/AndroidTransmit/actions/workflows/build-dmg.yml) 中手动运行 **Build DMG**，会使用 Xcode 27 / Apple Silicon runner 编译依赖、运行模拟测试、构建 Release 并上传 DMG 和 SHA-256 校验文件，产物保留 30 天。
-
-推送 `v*` 标签（例如 `git tag v1.0.0 && git push origin v1.0.0`）会在构建成功后自动创建 GitHub Release 并附上 DMG。应用版本取自 Xcode 项目的 `MARKETING_VERSION`；发布新版本前同步更新该值。
-
-本地打包：
-
-```sh
-brew install libusb pkgconf
-./script/setup_dependencies.sh
-./script/package_dmg.sh
-```
-
-产物位于 `dist/AndroidTransmit-<版本>-arm64.dmg`。打开后将应用拖到 Applications 即可安装；包内包含 libmtp、libusb 及对应源码、许可，无需在目标 Mac 安装 Homebrew。当前支持范围仍为 Apple Silicon / macOS 27。
-
-工作流无需额外 Secrets，使用 ad-hoc 签名，尚未经过 Apple Developer ID 签名与公证，因此下载的应用可能被 Gatekeeper 拦截。确认来源后，可在“系统设置 → 隐私与安全性”中允许打开。
-
 ## 使用
 
 1. 使用支持数据的 USB 线连接手机，解锁，选择“文件传输 / MTP”，允许文件访问。
@@ -78,6 +60,6 @@ brew install libusb pkgconf
 ## 第三方依赖
 
 - [libmtp 1.1.23](https://github.com/libmtp/libmtp)：LGPL-2.1-or-later，源码与许可保留于 `.build/dependencies/libmtp-1.1.23`。
-- [libusb](https://github.com/libusb/libusb)：LGPL-2.1-or-later，版本与来源由安装包内的 SBOM 记录，本机 Homebrew 安装的 `COPYING` 位于 `/opt/homebrew/opt/libusb/COPYING`。
+- [libusb](https://github.com/libusb/libusb)：LGPL-2.1-or-later，版本与来源由安装包内的 SBOM 记录，本机 Homebrew 安装的 `COPYING` 位于 `$(brew --prefix libusb)/COPYING`。
 
 应用动态链接这些库，未修改第三方源码。DMG 中已附依赖、对应源码与许可，详见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。正式签名与公证尚未配置。

@@ -2,7 +2,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 ./script/check_dependencies.sh
-PREFIX=/opt/homebrew/opt/libmtp
+PREFIX="$(brew --prefix)/opt/libmtp"
 [[ -f .build/native/include/libmtp.h ]] && PREFIX="$(pwd)/.build/native"
 mkdir -p .build/tests
 xcrun clang -c AndroidTransmit/Support/MTPBridge.c -I"$PREFIX/include" -o .build/tests/MTPBridge.o
